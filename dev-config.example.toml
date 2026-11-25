@@ -1,21 +1,21 @@
 # Develop die-markdown beside a DIE checkout and a die-draw checkout: copy this file to
-# `.cargo/config.toml` (which git ignores) and write your own paths for the `/abs/path/to/...`
-# placeholders. Cargo doesn't expand `~`, so they must be absolute, such as
-# `/Users/you/src/die/crates/die-core`.
+# `.cargo/config.toml` (which git ignores). The paths assume both are checked out beside this
+# repository (`../die`, `../die-draw`); cargo reads a relative path here from this repository's
+# root.
 #
 # The patches build against your checkouts rather than github.com/0xDEADBEE7/die and
 # github.com/0xDEADBEE7/die-draw at `main`, so a change to die-core or die-draw is seen here before
 # it's pushed. Every repository in one build (this one, die-config, the other extensions) should
 # patch to the same checkouts, or two die-cores or two die-draws meet.
 [patch."https://github.com/0xDEADBEE7/die"]
-die-core = { path = "/abs/path/to/die/crates/die-core" }
-die-vim = { path = "/abs/path/to/die/crates/die-vim" }
-die-test-cap = { path = "/abs/path/to/die/tools/test-cap" }
+die-core = { path = "../die/crates/die-core" }
+die-vim = { path = "../die/crates/die-vim" }
+die-test-cap = { path = "../die/tools/test-cap" }
 
 [patch."https://github.com/0xDEADBEE7/die-draw"]
-die-draw = { path = "/abs/path/to/die-draw" }
+die-draw = { path = "../die-draw" }
 
 # Where DIE's own fonts are (`cargo xtask fonts` in the DIE checkout fetches them). die-draw
 # finds them here, at run time and as built; the tests that set a page in them need it.
 [env]
-DIE_FONT_DIR = "/abs/path/to/die/fonts"
+DIE_FONT_DIR = { value = "../die/fonts", relative = true }

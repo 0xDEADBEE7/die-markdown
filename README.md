@@ -137,15 +137,16 @@ DIE's crates come from [github.com/0xDEADBEE7/die](https://github.com/0xDEADBEE7
 from [github.com/0xDEADBEE7/die-draw](https://github.com/0xDEADBEE7/die-draw), both at `main`
 (never a `rev`, so every repository in one build has the same die-core and the same die-draw). To
 build against checkouts instead, copy `dev-config.example.toml` to `.cargo/config.toml`, which git
-ignores, and replace each `/abs/path/to/...` placeholder with an absolute path (cargo doesn't
-expand `~`): the `[patch]` sections point die-core, die-vim and die-test-cap at a DIE checkout's
-crates and die-draw at a die-draw checkout, and `[env]` sets `DIE_FONT_DIR` to DIE's `fonts/`
+ignores. Its paths are relative, for a DIE checkout and a die-draw checkout beside this one
+(`../die`, `../die-draw`), which cargo reads from this repository's root; change any that's
+elsewhere. The `[patch]` sections point die-core, die-vim and die-test-cap at the DIE checkout's
+crates and die-draw at the die-draw checkout, and `[env]` sets `DIE_FONT_DIR` to DIE's `fonts/`
 (`cargo xtask fonts` in DIE's checkout fetches them). Patch every repository in one build to the
 same checkouts.
 
 ```sh
 mkdir -p .cargo
-cp dev-config.example.toml .cargo/config.toml   # then write out the paths
+cp dev-config.example.toml .cargo/config.toml   # for checkouts beside this one
 ```
 
 Then, with the Rust that `rust-toolchain.toml` pins (1.96.0):
