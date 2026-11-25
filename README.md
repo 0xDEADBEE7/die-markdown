@@ -78,6 +78,10 @@ mono-dark styles them from your preview's stylesheet (`mono-dark.css`) and its c
 
 **What it costs.** Nothing for a file that's raw. On the owner's Mac, in a Retina window: `\m` shows DIE's manual (80 KB) in about 18 ms and its M0 log (480 KB) in about 29; a scroll step takes about 2 ms, and following an edit about 4 ms here and 13 ms there, twice that with the page in two windows of different widths.
 
+### The view in place
+
+Where there's no page, `\m` shows the file rendered in its own buffer: the markup hidden under decorations and never removed, the text styled in the cell grid's one size of letter, so headings differ by weight, underline and brightness. A code block is a filled box, a table is aligned with `│` between its columns, `•` `◦` `▪` and `☐` `☑` stand for bullets and task boxes, a quote has a `▎` bar, a picture is `‹image: alt›`, and HTML and footnote labels show dimmed as written. Everything else is as written: nothing is reflowed. die-vim's keys that move, search, select and yank work on what's shown, and the buffer is read-only while rendered, since a key at the edge of hidden markup would change what you can't see: `\m` again to edit. `<CR>` on a link follows it as on a page. It's planned again when the text or its width changes, and the session keeps which buffers have it.
+
 ## What isn't there yet
 
 Nobody has seen the page on screen: it was checked as pixels the harness was handed and as PNG
@@ -142,6 +146,22 @@ mkdir -p .cargo
 cp dev-config.example.toml .cargo/config.toml   # then write out the paths
 ```
 
+**Until die-draw is on GitHub**, a build stops at `failed to load source for dependency die-draw`:
+with no `Cargo.lock`, cargo asks a patched git source for its packages before it patches it, and
+github.com/0xDEADBEE7/die-draw isn't there yet. A lock that already holds die-draw at the patch
+gets past it. Seed one from DIE's lock from before the split, which has die-draw as a path
+package, and resolve once with the dev config in place:
+
+```sh
+git -C ../die show 4eaadf3:Cargo.lock > Cargo.lock
+cargo metadata --format-version 1 > /dev/null
+```
+
+The lock then holds DIE's crates and die-draw at your checkouts and the third-party crates at
+DIE's versions, and cargo builds without asking GitHub for any of them (it resolves `--offline`).
+die-config's README has the same recipe for a config, under "Before the repositories are on
+GitHub". Don't commit that lock: with path patches it records local paths.
+
 Then, with the Rust that `rust-toolchain.toml` pins (1.96.0):
 
 ```sh
@@ -165,7 +185,8 @@ typesetter's work without DIE and for timing it:
 cargo run --release --example page_shot -- in.md out.png --width 1800 --scale 2
 ```
 
-`Cargo.lock` isn't committed yet: with path patches it would record local paths.
+`Cargo.lock` isn't committed yet: with path patches it would record local paths. The one to
+commit is made after the push, against GitHub.
 
 ## Licence
 
