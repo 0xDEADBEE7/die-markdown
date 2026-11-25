@@ -32,7 +32,7 @@ you edit.
 - HTML: `<br>`, `<kbd>`, `<sub>`, `<sup>`, `<b>`, `<i>`, `<code>`, `<a href>`, `<a id>` and `<a name>` as anchors, `<img>`, `align="center"`, and `<details>`, closed unless it says `open`. `<CR>` or a click on a summary opens and closes it, and it stays as you left it while the file has it. Comments and other tags vanish, their text kept.
 - Front matter is left out; with `front_matter` on it's a table of its keys.
 
-**Code colours.** A fenced block is in its language's colours, by the fence's first word: Rust, shell and console sessions, TOML, INI, JSON, YAML, Python, JavaScript and TypeScript, C and C++, Go, Java, Kotlin, Swift, Ruby, Lua, Emacs Lisp and the other Lisps, SQL, HTML and XML, CSS, diffs, Markdown, Dockerfiles, makefiles, Nix, Zig and Haskell. A block with no language, or one it doesn't know, is plain, as GitHub draws it. In mono-dark the colours are the greys of highlight.js's grayscale-dark, which your preview colours code with; in the GitHub palettes they're GitHub's.
+**Code colours.** A fenced block is in its language's colours, by the fence's first word: Rust, shell and console sessions, TOML, INI, JSON, YAML, Python, JavaScript and TypeScript, C and C++, Go, Java, Kotlin, Swift, Ruby, Lua, Emacs Lisp and the other Lisps, SQL, HTML and XML, CSS, diffs, Markdown, Dockerfiles, makefiles, Nix, Zig and Haskell. A block with no language, or one it doesn't know, is plain, as GitHub draws it. In mono-dark, as die-config styles the faces, the colours are the greys of highlight.js's grayscale-dark, which the owner's Emacs markdown preview colours code with; in the GitHub palettes they're GitHub's.
 
 **Keys on a page.** A page is for reading: it has no cursor, and these keys are its own (`markdown-page-*`). A key it hasn't got is undefined there, `/` and `y` among them.
 
@@ -61,7 +61,7 @@ you edit.
 - `front_matter`: false leaves it out; true shows it, as a table on a page and dimmed in place.
 - `opener`: none means `xdg-open` where there is one, else `open`.
 - `page`: true.
-- `palette`: `Theme` (the default), your `markdown-*` faces; or `GithubDark` and `GithubLight`, GitHub's own colours.
+- `palette`: `Theme` (the default), the theme's `markdown-*` faces; or `GithubDark` and `GithubLight`, GitHub's own colours.
 - `fonts`: none means DIE's own fonts are found as DIE finds them; they're the last resort on a system with no sans the page knows, and fill in symbols the sans lacks.
 
 **Faces.** A page reads its colours from the faces the view in place draws in:
@@ -74,7 +74,7 @@ you edit.
 - code colours from `markdown-code-keyword`, `-string`, `-comment`, `-number`, `-function`, `-type`, `-constant`, `-meta`, `-variable`, `-tag`, `-attr`, `-inserted`, `-deleted` and `-heading`;
 - the alerts from the theme's ANSI colours.
 
-mono-dark styles them from your preview's stylesheet (`mono-dark.css`) and its code theme (`grayscale-dark`). A theme that styles none of the code faces draws code plain.
+[die-config](https://github.com/0xDEADBEE7/die-config) styles them in mono-dark's palette, from the owner's markdown preview stylesheet (`mono-dark.css`) and its code theme (`grayscale-dark`). A theme that styles none of the code faces draws code plain.
 
 **What it costs.** Nothing for a file that's raw. On the owner's Mac, in a Retina window: `\m` shows DIE's manual (80 KB) in about 18 ms and its M0 log (480 KB) in about 29; a scroll step takes about 2 ms, and following an edit about 4 ms here and 13 ms there, twice that with the page in two windows of different widths.
 
@@ -97,8 +97,9 @@ the main thread while it's scaled, about 30 ms for 4000 by 3000.
 
 ## Installing it in die-config
 
-die-config is the owner's DIE: a binary crate on top of die-dev that lists the extensions it
-installs and binds their keys. Installing this one is a dependency line in its `Cargo.toml`:
+[die-config](https://github.com/0xDEADBEE7/die-config) is the owner's DIE: a binary crate on top
+of die-dev that lists the extensions it installs and binds their keys. Installing this one is a
+dependency line in its `Cargo.toml`:
 
 ```toml
 die-markdown = { git = "https://github.com/0xDEADBEE7/die-markdown", branch = "main" }
@@ -115,7 +116,7 @@ Box::new(die_markdown::Markdown::new(die_markdown::Options {
 })),
 ```
 
-and `\m`, which the extension leaves to your config. It goes in the `markdown` mode's keymap, so
+and `\m`, which the extension leaves to the config. It goes in the `markdown` mode's keymap, so
 it's a key only where there's markdown to render, and in the page's, a buffer of its own with no
 mode, where it goes back to the file:
 
@@ -132,35 +133,20 @@ is deleting the dependency, the entry and the binding.
 
 ## Developing it beside DIE
 
-DIE's crates come from github.com/0xDEADBEE7/die and die-draw from
-github.com/0xDEADBEE7/die-draw, both at `main` (never a `rev`, so every repository in one build
-has the same die-core and the same die-draw). To build against checkouts instead, copy
-`dev-config.example.toml` to `.cargo/config.toml`, which git ignores, and replace each
-`/abs/path/to/...` placeholder with an absolute path (cargo doesn't expand `~`): the `[patch]`
-sections point die-core, die-vim and die-test-cap at a DIE checkout's crates and die-draw at a
-die-draw checkout, and `[env]` sets `DIE_FONT_DIR` to DIE's `fonts/` (`cargo xtask fonts` in DIE's
-checkout fetches them). Patch every repository in one build to the same checkouts.
+DIE's crates come from [github.com/0xDEADBEE7/die](https://github.com/0xDEADBEE7/die) and die-draw
+from [github.com/0xDEADBEE7/die-draw](https://github.com/0xDEADBEE7/die-draw), both at `main`
+(never a `rev`, so every repository in one build has the same die-core and the same die-draw). To
+build against checkouts instead, copy `dev-config.example.toml` to `.cargo/config.toml`, which git
+ignores, and replace each `/abs/path/to/...` placeholder with an absolute path (cargo doesn't
+expand `~`): the `[patch]` sections point die-core, die-vim and die-test-cap at a DIE checkout's
+crates and die-draw at a die-draw checkout, and `[env]` sets `DIE_FONT_DIR` to DIE's `fonts/`
+(`cargo xtask fonts` in DIE's checkout fetches them). Patch every repository in one build to the
+same checkouts.
 
 ```sh
 mkdir -p .cargo
 cp dev-config.example.toml .cargo/config.toml   # then write out the paths
 ```
-
-**Until die-draw is on GitHub**, a build stops at `failed to load source for dependency die-draw`:
-with no `Cargo.lock`, cargo asks a patched git source for its packages before it patches it, and
-github.com/0xDEADBEE7/die-draw isn't there yet. A lock that already holds die-draw at the patch
-gets past it. Seed one from DIE's lock from before the split, which has die-draw as a path
-package, and resolve once with the dev config in place:
-
-```sh
-git -C ../die show 4eaadf3:Cargo.lock > Cargo.lock
-cargo metadata --format-version 1 > /dev/null
-```
-
-The lock then holds DIE's crates and die-draw at your checkouts and the third-party crates at
-DIE's versions, and cargo builds without asking GitHub for any of them (it resolves `--offline`).
-die-config's README has the same recipe for a config, under "Before the repositories are on
-GitHub". Don't commit that lock: with path patches it records local paths.
 
 Then, with the Rust that `rust-toolchain.toml` pins (1.96.0):
 
@@ -184,9 +170,6 @@ typesetter's work without DIE and for timing it:
 ```sh
 cargo run --release --example page_shot -- in.md out.png --width 1800 --scale 2
 ```
-
-`Cargo.lock` isn't committed yet: with path patches it would record local paths. The one to
-commit is made after the push, against GitHub.
 
 ## Licence
 
