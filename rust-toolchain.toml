@@ -1,0 +1,5 @@
+# Pinned so rustfmt and clippy can't move under us, as DIE pins them. The pin is for the
+# checks: die-markdown builds with any Rust from Cargo.toml's rust-version up.
+[toolchain]
+channel = "1.96.0"
+components = ["rustfmt", "clippy"]

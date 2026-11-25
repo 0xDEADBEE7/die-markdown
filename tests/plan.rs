@@ -871,11 +871,16 @@ fn any_text_has_a_plan_the_editor_can_take() {
         }
     }
 
-    // DIE's own documents, whole and cut short at two hundred places.
-    let docs = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs");
+    // Real documents, whole and cut short at two hundred places: DIE's two that tests/docs keeps
+    // and the sample pages.
+    let docs = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests");
     let mut files = Vec::new();
     markdown_under(&docs, &mut files);
-    assert!(!files.is_empty(), "no markdown under {}", docs.display());
+    assert!(
+        files.len() >= 4,
+        "too little markdown under {}",
+        docs.display()
+    );
     for file in files {
         let text = std::fs::read_to_string(&file).unwrap();
         let name = file.display();

@@ -4593,13 +4593,16 @@ print(f"{len(xs)}", MAX)"#;
     #[test]
     fn every_code_block_in_the_docs_reads_in_every_language() {
         use pulldown_cmark::{CodeBlockKind, Event, Parser, Tag, TagEnd};
-        let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs");
-        let Ok(dir) = std::fs::read_dir(&root) else {
-            return eprintln!("skipped: no {}", root.display());
-        };
+        // DIE's two documents that tests/docs keeps, and the sample pages.
+        let here = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+        let mut paths = Vec::new();
+        for root in [here.join("tests/docs"), here.join("tests/pages")] {
+            let dir =
+                std::fs::read_dir(&root).unwrap_or_else(|e| panic!("{}: {e}", root.display()));
+            paths.extend(dir.flatten().map(|entry| entry.path()));
+        }
         let mut blocks = Vec::new();
-        for entry in dir.flatten() {
-            let path = entry.path();
+        for path in paths {
             if path.extension().is_none_or(|e| e != "md") {
                 continue;
             }

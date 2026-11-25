@@ -2,7 +2,7 @@
 //! the typesetter's work without DIE, and for timing it:
 //!
 //! ```sh
-//! cargo run --release --offline -p die-markdown --example page_shot -- in.md out.png \
+//! cargo run --release --example page_shot -- in.md out.png \
 //!     [--width PX] [--scale S] [--top Y] [--height H] [--palette NAME] [--focus N] \
 //!     [--front-matter] [--zoom N] [--find TEXT] [--open OFFSET]...
 //! ```

@@ -1,6 +1,6 @@
-//! die-markdown: a rendered view of a markdown file, as an extension (scope D14). It depends on
-//! die-core alone, so it's platform-neutral and out of the product: `cargo xtask lint` holds it
-//! to that. Its parts:
+//! die-markdown: a rendered view of a markdown file, as a DIE extension in a repository of its
+//! own, outside DIE. It depends on die-core and die-draw, the extensions' shared drawing, and on
+//! nothing else of DIE's, so it's platform-neutral. Its parts:
 //!
 //! - this file: [`Markdown`], the extension, with your [`Options`], the `markdown` mode a
 //!   markdown file's buffer gets, the `markdown-toggle` and `markdown-follow-link` commands, the
@@ -78,8 +78,8 @@ pub struct Options {
     /// The colours a page is drawn in.
     pub palette: Colours,
     /// The directory DIE's own fonts are in, which a page falls back on where the system has
-    /// none it knows. None finds it as DIE does: `$DIE_FONT_DIR`, the app's bundle, the
-    /// workspace's `fonts/`.
+    /// none it knows. None finds it as die-draw's `font_dir` does: `$DIE_FONT_DIR`, the app's
+    /// bundle, the `$DIE_FONT_DIR` this was built with, `fonts/` in the working directory.
     pub fonts: Option<PathBuf>,
 }
 

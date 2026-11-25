@@ -1,28 +1,40 @@
 [package]
 name = "die-markdown"
-description = "A rendered view of markdown in DIE, toggled by a key: a page drawn as GitHub draws a README where the host shows pixels, the markup hidden in its own buffer where it doesn't (scope D14)"
-version.workspace = true
-edition.workspace = true
-rust-version.workspace = true
-license.workspace = true
-publish.workspace = true
+description = "A rendered view of markdown in DIE, toggled by a key: a page drawn as GitHub draws a README where the host shows pixels, the markup hidden in its own buffer where it doesn't. An extension, outside DIE"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT OR Apache-2.0"
+publish = false
 
-# An extension, outside the product: it depends on die-core and die-draw only (`cargo xtask
-# lint` checks). pulldown-cmark stays behind plan.rs and typeset/doc.rs; die-draw's fonts, blit
-# and PNG reader and tiny-skia's paths behind typeset/, the page's typesetter. Neither knows
-# anything of the editor. png writes the pictures page_shot and the tests make.
+# An extension, outside DIE: it depends on die-core and die-draw only. pulldown-cmark stays
+# behind plan.rs and typeset/doc.rs; die-draw's fonts, blit and PNG reader and tiny-skia's paths
+# behind typeset/, the page's typesetter. Neither knows anything of the editor.
+#
+# DIE's crates and die-draw come from git at `main`, never a `rev`, so every repository in one
+# build resolves to the same die-core and die-draw. A local, gitignored `.cargo/config.toml`
+# patches them to checkouts for development (dev-config.example.toml, README). The third-party
+# pins are DIE's own, with its features, so this build and DIE's resolve to one copy of each.
 [dependencies]
-die-core.workspace = true
-die-draw.workspace = true
-pulldown-cmark.workspace = true
-tiny-skia.workspace = true
-unicode-width.workspace = true
-unicode-segmentation.workspace = true
+die-core = { git = "https://github.com/0xDEADBEE7/die", branch = "main" }
+die-draw = { git = "https://github.com/0xDEADBEE7/die-draw", branch = "main" }
+# CommonMark and GFM, without its HTML renderer.
+pulldown-cmark = { version = "=0.13.6", default-features = false }
+tiny-skia = { version = "=0.12.0", default-features = false, features = ["std", "simd"] }
+unicode-width = { version = "=0.2.2", default-features = false }
+unicode-segmentation = "=1.13.3"
 
+# The memory limit inside every test binary and die-vim's keys, as in DIE. png writes the
+# pictures page_shot and the tests make.
 [dev-dependencies]
-die-test-cap.workspace = true
-die-vim.workspace = true
-png.workspace = true
+die-test-cap = { git = "https://github.com/0xDEADBEE7/die", branch = "main" }
+die-vim = { git = "https://github.com/0xDEADBEE7/die", branch = "main" }
+png = "=0.18.1"
 
-[lints]
-workspace = true
+[lints.rust]
+unsafe_code = "forbid"
+
+# As in DIE: the tests lay out and paint long documents, slow unoptimized.
+[profile.test]
+opt-level = 1
+debug = "line-tables-only"

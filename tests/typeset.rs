@@ -161,11 +161,12 @@ fn letters_are_kerned() {
     );
 }
 
-/// The markdown files to lay out: the repository's documents and the two sample pages.
+/// The markdown files to lay out: DIE's two documents that tests/docs keeps, long real ones, and
+/// the two sample pages.
 fn documents() -> Vec<PathBuf> {
     let here = Path::new(env!("CARGO_MANIFEST_DIR"));
     let mut files = Vec::new();
-    for dir in [here.join("../../docs"), here.join("tests/pages")] {
+    for dir in [here.join("tests/docs"), here.join("tests/pages")] {
         let entries = std::fs::read_dir(&dir).unwrap_or_else(|e| panic!("{}: {e}", dir.display()));
         let paths = entries.filter_map(|e| Some(e.ok()?.path()));
         files.extend(paths.filter(|p| p.extension().is_some_and(|e| e == "md")));

@@ -1684,12 +1684,18 @@ fn a_session_with_the_view_in_place_restores_in_place_and_no_pixels_means_in_pla
 }
 
 /// What a page costs, printed (`--nocapture`): a window of 160 by 47 cells of 19 by 40 pixels,
-/// a Retina display's, on the manual and on the log, the repository's longest document. The
+/// a Retina display's, on DIE's manual (tests/docs keeps it) and on a long document, the manual
+/// and DIE's extension contract three times over, about 690 KB, as long as DIE's log. The
 /// manual's are held to loose bounds, since the test profile is lightly optimized and the
 /// machine may be busy.
 #[test]
 fn what_a_page_costs() {
-    let docs = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../docs");
+    let docs = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/docs");
+    let manual = docs.join("using-die.md").canonicalize().unwrap();
+    let text = fs::read_to_string(&manual).unwrap();
+    let contract = fs::read_to_string(docs.join("extension-contract.md")).unwrap();
+    let long = tree("costs").join("long.md");
+    fs::write(&long, format!("{text}\n{contract}\n").repeat(3)).unwrap();
     let mut h = harness(Options::default());
     h.set_window_size(160, 47);
     h.set_cell_pixels(CellPixels {
@@ -1698,8 +1704,9 @@ fn what_a_page_costs() {
         scale: 2.0,
     });
     h.run_until_idle();
-    for (name, bound) in [("using-die.md", Some(3000)), ("m0-log.md", None)] {
-        let file = open(&mut h, &docs.join(name).canonicalize().unwrap());
+    for (path, bound) in [(manual, Some(3000)), (long, None)] {
+        let name = path.file_name().unwrap().to_string_lossy().into_owned();
+        let file = open(&mut h, &path);
         let bytes = h.text(file).unwrap().len();
         let started = Instant::now();
         keys(&mut h, "\\m");
